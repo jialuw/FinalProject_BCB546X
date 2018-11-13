@@ -1,0 +1,15 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+ 
+
+```{r}
+passport <- read.csv("./12864_2015_1444_MOESM1_ESM.csv", 1, sep = " ")
+passport
+```
+
+```{r}
+
+```
+
