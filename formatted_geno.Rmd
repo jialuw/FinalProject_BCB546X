@@ -1,0 +1,72 @@
+---
+title: "formatting"
+author: "Jialu Wei"
+date: "November 20, 2018"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+#data inspection
+```{r}
+geno_ori <- read.csv("./Suppl_Table_2.csv")
+head(geno_ori)
+nrow(geno_ori)
+ncol(geno_ori)
+str(geno_ori)
+geno_ori[]=lapply(geno_ori,as.character)
+```
+
+# Formatted 
+# Na:-9
+# AA-11 TT-22 CC-33 GG-44 
+```{r}
+geno_copy1 <- geno_ori
+geno_copy1 <- geno_ori %>%
+  replace(geno_copy1 == "",-9) %>% # NA as -9
+  replace(geno_copy1 == "AA",1) %>%
+  replace(geno_copy1 == "AG",1) %>%
+  replace(geno_copy1 == "AT",1) %>%
+  replace(geno_copy1 == "AC",1) %>%
+  replace(geno_copy1 == "TT",2) %>%
+  replace(geno_copy1 == "TA",2) %>%
+  replace(geno_copy1 == "TC",2) %>%
+  replace(geno_copy1 == "TG",2) %>%
+  replace(geno_copy1 == "CC",3) %>%
+  replace(geno_copy1 == "CA",3) %>%
+  replace(geno_copy1 == "CT",3) %>%
+  replace(geno_copy1 == "CG",3) %>%
+  replace(geno_copy1 == "GG",4) %>%
+  replace(geno_copy1 == "GA",4) %>%
+  replace(geno_copy1 == "GT",4) %>%
+  replace(geno_copy1 == "GC",4) 
+geno_copy2 <- geno_ori
+geno_copy2 <- geno_ori %>%
+  replace(geno_copy2 == "",-9) %>%
+  replace(geno_copy2 == "AA",1) %>%
+  replace(geno_copy2 == "AG",4) %>%
+  replace(geno_copy2 == "AT",2) %>%
+  replace(geno_copy2 == "AC",3) %>%
+  replace(geno_copy2 == "TT",2) %>%
+  replace(geno_copy2 == "TA",1) %>%
+  replace(geno_copy2 == "TC",3) %>%
+  replace(geno_copy2 == "TG",4) %>%
+  replace(geno_copy2 == "CC",3) %>%
+  replace(geno_copy2 == "CA",1) %>%
+  replace(geno_copy2 == "CT",2) %>%
+  replace(geno_copy2 == "CG",4) %>%
+  replace(geno_copy2 == "GG",4) %>%
+  replace(geno_copy2 == "GA",1) %>%
+  replace(geno_copy2 == "GT",2) %>%
+  replace(geno_copy2 == "GC",3) 
+  head(geno_copy1) 
+  head(geno_copy2)
+  geno_combine <- rbind(geno_copy1,geno_copy2) 
+  geno_formatted <- arrange(geno_combine,X) 
+  write.table(geno_formatted,"formatted_geno.txt")
+```
+
+
+
+
