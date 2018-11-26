@@ -1,0 +1,58 @@
+---
+title: "passport"
+author: "Jialu Wei"
+date: "November 25, 2018"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+passport <- read.csv("./12864_2015_1444_MOESM1_ESM.csv")
+match_infor <- select(passport,`Sample`,`group1`)
+unique(match_infor$group1)
+
+SP <- c("SP_Ecuador","SP_mixture","SP_Montane","SP_Peru")
+SLC_Andean <- c("SLC_Peru","SLC_Ecuador","SLC_SP_Peru")
+SLC_nonAndean <- c("SLC_non_Andean","SLC_mixture","SLC_Wva106","SLC_LA2135","SLC_LA2792")
+SLL_vintage <- c("SLL_vintage")
+SLL_fresh <- c("SLL_fresh")
+SLL_processing <- c("SLL_processing_1","SLL_processing_2")
+others <- c("mixture","SLL_1","conflicting classification","SN","Schm","","SLC_1","SG")
+
+SP_sample <- subset(match_infor,group1 %in% SP) 
+SLC_Andean_sample <- subset(match_infor,group1 %in% SLC_Andean)
+SLC_nonAndean_sample <- subset(match_infor,group1 %in% SLC_nonAndean)
+SLL_vintage_sample <- subset(match_infor,group1 %in% SLL_vintage)
+SLL_fresh_sample <- subset(match_infor,group1 %in% SLL_fresh)
+SLL_processing_sample <- subset(match_infor,group1 %in% SLL_processing)
+others_sample <- subset(match_infor,group1 %in% others)
+
+
+```
+
+```{r}
+formatted <- read.table("./formatted_geno.txt") %>% arrange(X)
+SP_geno <- subset(formatted, X %in% SP_sample$Sample) %>% arrange(X) %>% mutate(group = "SP")
+SLC_Andean_geno <- subset(formatted, X %in% SLC_Andean_sample$Sample) %>% arrange(X) %>% mutate(group = "SLC_Andean")
+SLC_non_Andean_geno <- subset(formatted, X %in% SLC_nonAndean_sample$Sample) %>% arrange(X) %>% mutate(group = "SLC_non_Andean")
+SLL_vintage_geno <- subset(formatted, X %in% SLL_vintage_sample$Sample) %>% arrange(X) %>% mutate(group = "SLL_vintage")
+SLL_fresh_geno <- subset(formatted, X %in% SLL_fresh_sample$Sample) %>% arrange(X) %>% mutate(group = "SLL_fresh")
+SLL_processing_geno <- subset(formatted, X %in% SLL_processing_sample$Sample) %>% arrange(X) %>% mutate(group = "SLL_processing")
+others_geno <- subset(formatted, X %in% others_sample$Sample) %>% arrange(X) %>% mutate(group = "others")
+
+```
+
+```{r}
+test <-  match_infor$Sample %in% formatted$X 
+test
+```
+
+```{r}
+geno_plus_group <- rbind(SP_geno,SLC_Andean_geno) %>% rbind(SLC_non_Andean_geno) %>% rbind(SLL_vintage_geno) %>% rbind(SLL_fresh_geno) %>% rbind(SLL_processing_geno) %>% rbind(others_geno) 
+geno_plus_group <- geno_plus_group[,c(1,7722,2:7721)]
+write.table(geno_plus_group,"geno_plus_group.txt")
+write.csv(geno_plus_group,"geno_plus_group.csv")
+```
+

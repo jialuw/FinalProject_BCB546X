@@ -14,7 +14,6 @@ geno_ori <- read.csv("./Suppl_Table_2.csv")
 head(geno_ori)
 nrow(geno_ori)
 ncol(geno_ori)
-str(geno_ori)
 geno_ori[]=lapply(geno_ori,as.character)
 ```
 
